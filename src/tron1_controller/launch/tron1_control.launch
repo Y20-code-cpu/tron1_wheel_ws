@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- 机器人IP地址（根据实际情况修改）-->
+    <arg name="robot_ip" default="10.192.1.2"/>
+    
+    <!-- 机器人序列号（根据实际情况修改）-->
+    <arg name="robot_accid" default="PF_TRON1A_075"/>
+    
+    <!-- 控制频率（Hz）-->
+    <arg name="control_rate" default="50.0"/>
+    
+    <!-- 启动TRON1控制器节点 -->
+    <node name="tron1_controller" pkg="tron1_controller" type="tron1_controller_node" output="screen">
+        <param name="robot_ip" value="$(arg robot_ip)"/>
+        <param name="robot_accid" value="$(arg robot_accid)"/>
+        <param name="control_rate" value="$(arg control_rate)"/>
+    </node>
+    
+    <!-- 启动键盘控制节点（可选）-->
+    <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" 
+          output="screen" if="$(eval optenv('USE_KEYBOARD', 'false') == 'true')">
+        <remap from="/cmd_vel" to="/cmd_vel"/>
+    </node>
+</launch>

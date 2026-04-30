@@ -1,0 +1,8 @@
+prefix=/home/sheldom/tron1_ws/install
+
+Name: tron1_controller
+Description: Description of tron1_controller
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

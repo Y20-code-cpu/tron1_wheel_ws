@@ -1,0 +1,28 @@
+free_thresh: 0.25
+image: nav_map.pgm
+negate: 0
+occupied_thresh: 0.65
+origin:
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - &id001 !!python/object/apply:numpy.dtype
+    args:
+    - f8
+    - false
+    - true
+    state: !!python/tuple
+    - 3
+    - <
+    - null
+    - null
+    - null
+    - -1
+    - -1
+    - 0
+  - !!binary |
+    AAAAIJ4PAcA=
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    AAAAAM71FcA=
+- 0.0
+resolution: 0.05

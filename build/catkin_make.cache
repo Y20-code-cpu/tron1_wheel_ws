@@ -1,0 +1,2 @@
+tron1_controller
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCATKIN_DEVEL_PREFIX=/home/sheldom/tron1_ws/devel -DCMAKE_INSTALL_PREFIX=/home/sheldom/tron1_ws/install -G Unix Makefiles

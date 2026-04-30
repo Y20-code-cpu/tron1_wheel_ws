@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sheldom/tron1_ws/src/tron1_controller/include/tron1_controller/websocket_client.h
+string
+-
+functional
+-
+websocketpp/client.hpp
+-
+websocketpp/config/asio_no_tls.hpp
+-
+
+/home/sheldom/tron1_ws/src/tron1_controller/src/websocket_client.cpp
+tron1_controller/websocket_client.h
+/home/sheldom/tron1_ws/src/tron1_controller/src/tron1_controller/websocket_client.h
+iostream
+-
+websocketpp/common/asio.hpp
+-
+
