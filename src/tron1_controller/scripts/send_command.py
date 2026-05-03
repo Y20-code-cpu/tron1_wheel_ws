@@ -15,28 +15,13 @@ from enum import IntEnum
 
 
 class LightEffect(IntEnum):
-    STATIC_RED = 0
-    STATIC_GREEN = 1
-    STATIC_BLUE = 2
-    STATIC_CYAN = 3
-    STATIC_PURPLE = 4
-    STATIC_YELLOW = 5
-    STATIC_WHITE = 6
-    LOW_FLASH_RED = 7
-    LOW_FLASH_GREEN = 8
-    LOW_FLASH_BLUE = 9
-    LOW_FLASH_CYAN = 10
-    LOW_FLASH_PURPLE = 11
-    LOW_FLASH_YELLOW = 12
-    LOW_FLASH_WHITE = 13
-    FAST_FLASH_RED = 14
-    FAST_FLASH_GREEN = 15
-    FAST_FLASH_BLUE = 16
-    FAST_FLASH_CYAN = 17
-    FAST_FLASH_PURPLE = 18
-    FAST_FLASH_YELLOW = 19
-    FAST_FLASH_WHITE = 20
-
+    STATIC_RED = 1
+    STATIC_GREEN = 2
+    STATIC_BLUE_Dark = 3
+    STATIC_BLUE_Cambridge = 4
+    STATIC_PURPLE = 5
+    STATIC_YELLOW = 6
+    STATIC_WHITE = 7
 
 class TRON1Robot:
     SPEED_LIMIT_X = 3.0
@@ -58,7 +43,7 @@ class TRON1Robot:
         self.accid = accid
         self.ws = None
         self.running = False
-        self.status_printed = False  # 新增：标记是否已打印状态
+        self.status_printed = False  
         self.latest_status = {}
         self.status_thread = None
         self.response_events = {}
@@ -129,9 +114,6 @@ class TRON1Robot:
                     if not self.status_printed:
                         self._print_status()
                         self.status_printed = True
-                elif title == "notify_imu":
-                    data = resp_json.get("data", {})
-                    print(f"\n📐 IMU: 欧拉角={data.get('euler')}")
                 elif title == "notify_odom":
                     data = resp_json.get("data", {})
                     pos = data.get('pose_position', [])
@@ -228,7 +210,6 @@ class TRON1Robot:
             return False
     
     def stand(self):
-        print("🚀 执行站起...")
         resp = self.send_and_wait("request_stand_mode")
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -239,7 +220,6 @@ class TRON1Robot:
         return resp
     
     def walk_mode(self):
-        print("🚶 切换到行走模式...")
         resp = self.send_and_wait("request_walk_mode")
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -257,7 +237,6 @@ class TRON1Robot:
         return self.send("request_twist", data)
     
     def sitdown(self):
-        print("💺 执行蹲下...")
         resp = self.send_and_wait("request_sitdown")
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -272,7 +251,6 @@ class TRON1Robot:
         return self.send("request_emgy_stop")
     
     def recover(self):
-        print("🔄 摔倒恢复...")
         resp = self.send_and_wait("request_recover")
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -284,7 +262,6 @@ class TRON1Robot:
     
     def stair_mode(self, enable):
         mode = "开启" if enable else "关闭"
-        print(f"🪜 {mode}楼梯模式")
         resp = self.send_and_wait("request_stair_mode", {"enable": enable})
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -296,7 +273,6 @@ class TRON1Robot:
     
     def adjust_height(self, direction):
         action = "升高" if direction == 1 else "降低"
-        print(f"📏 {action}身高")
         resp = self.send_and_wait("request_base_height", {"direction": direction})
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -307,7 +283,6 @@ class TRON1Robot:
         return resp
     
     def set_light_effect(self, effect):
-        print(f"💡 设置灯光效果: {effect}")
         resp = self.send_and_wait("request_light_effect", {"effect": int(effect)})
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -317,14 +292,8 @@ class TRON1Robot:
                 print(f"⚠️ 灯光设置失败: {result}")
         return resp
     
-    def enable_imu(self, enable):
-        state = "开启" if enable else "关闭"
-        print(f"📐 {state}IMU推送")
-        return self.send("request_enable_imu", {"enable": enable})
-    
     def enable_odom(self, enable):
         state = "开启" if enable else "关闭"
-        print(f"📍 {state}里程计推送")
         resp = self.send_and_wait("request_enable_odom", {"enable": enable})
         if resp:
             result = resp.get("data", {}).get("result", "")
@@ -338,7 +307,6 @@ class TRON1Robot:
         print("📊 获取机器人状态...")
         self.status_printed = False  # 重置标记
         self.latest_status = {}
-        self.send("request_enable_imu", {"enable": True})
         
         for _ in range(10):
             time.sleep(0.5)
@@ -370,7 +338,6 @@ def main():
     subparsers.add_parser('stop', help='紧急停止')
     subparsers.add_parser('recover', help='摔倒恢复')
     subparsers.add_parser('status', help='获取一次状态')
-    subparsers.add_parser('enable_imu', help='开启IMU推送')
     subparsers.add_parser('enable_odom', help='开启里程计推送')
     
     move_parser = subparsers.add_parser('move', help='移动')
@@ -430,9 +397,6 @@ def main():
             robot.set_light_effect(args.effect)
         elif args.command == 'status':
             robot.get_status_once()
-        elif args.command == 'enable_imu':
-            robot.enable_imu(True)
-            time.sleep(2)
         elif args.command == 'enable_odom':
             robot.enable_odom(True)
             time.sleep(2)
